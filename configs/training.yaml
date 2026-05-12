@@ -1,0 +1,82 @@
+# SuperGradients training recipe for Nut Counting System
+#
+# NOTE: num_classes=2 is intentional — PPYoloE loss has a bug with num_classes=1.
+# Class 0 = nut, Class 1 = unused placeholder.
+#
+# Usage:
+#   python scripts/train.py --config configs/training.yaml
+
+# ── Dataset ──────────────────────────────────────────
+dataset:
+  name: combined         # combined = all 3 datasets merged (best nut performance)
+  data_dir: data/processed/combined
+  classes: ["nut"]
+  num_classes: 1          # effective (model uses 2 due to PPYoloE bug)
+
+# ── Data splits ──────────────────────────────────────
+splits:
+  train: train
+  val: val
+  calibration: calibration
+  test: test
+
+# ── Model ────────────────────────────────────────────
+model:
+  architecture: yolo_nas_s    # yolo_nas_s | yolo_nas_m | yolo_nas_l
+  pretrained_weights: coco    # coco | null
+  num_classes: 2              # see NOTE above — 2 avoids CUDA index error in PPYoloE loss
+
+# ── Training hyperparameters ─────────────────────────
+training:
+  epochs: 80
+  batch_size: 16
+  workers: 4
+  learning_rate: 5.0e-4
+  weight_decay: 1.0e-4
+  warmup_epochs: 3
+  warmup_lr: 1.0e-6
+  optimizer: AdamW
+  loss: yolo_nas_loss
+  mixed_precision: true       # uses torch.cuda.amp
+
+# ── Augmentations ────────────────────────────────────
+augmentations:
+  - MotionBlur:
+      kernel_size: [5, 15]
+      p: 0.3
+  - RandomBrightnessContrast:
+      brightness_limit: 0.3
+      contrast_limit: 0.3
+      p: 0.5
+  - RandomSunFlare:
+      src_radius: [100, 400]
+      src_color: [255, 255, 255]
+      num_flare_circles: [3, 8]
+      p: 0.2
+  - CoarseDropout:
+      max_holes: 3
+      max_height: 48
+      max_width: 48
+      p: 0.3
+  - GaussNoise:
+      var_limit: [5.0, 30.0]
+      p: 0.2
+  - ShiftScaleRotate:
+      shift_limit: 0.1
+      scale_limit: 0.2
+      rotate_limit: 15
+      p: 0.5
+  - HueSaturationValue:
+      hue_shift_limit: 5
+      sat_shift_limit: 20
+      val_shift_limit: 20
+      p: 0.3
+
+# ── Logging ──────────────────────────────────────────
+logging:
+  experiment_name: nut-counting-phase1
+  checkpoint_dir: checkpoints
+  log_dir: logs
+  save_top_k: 3
+  metric_to_watch: mAP_50
+  early_stopping_patience: 15

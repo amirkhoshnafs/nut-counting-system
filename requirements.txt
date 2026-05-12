@@ -1,0 +1,28 @@
+# Core
+torch>=2.0.0
+torchvision>=0.15.0
+super-gradients>=3.7.0
+opencv-python>=4.8.0
+numpy>=1.24.0
+
+# Tracking & visualization
+supervision>=0.18.0
+
+# Evaluation
+pycocotools>=2.0.0
+tqdm>=4.60.0
+
+# Statistics & calibration
+scikit-learn>=1.2.0
+statsmodels>=0.14.0
+matplotlib>=3.7.0
+
+# Config
+pyyaml>=6.0
+
+# Dashboard
+streamlit>=1.26.0
+pandas>=2.0.0
+
+# Dev
+pytest>=7.4.0

@@ -1,0 +1,58 @@
+# Nut Counting System — Runtime Configuration
+# ============================================
+# Copy this file and edit for your setup.
+# All paths are relative to the project root.
+
+# ── Model ─────────────────────────────────────────────
+model:
+  name: yolo_nas_s           # yolo_nas_s | yolo_nas_m | yolo_nas_l
+  checkpoint: checkpoints/nut_counting_phase1/RUN_20260509_142649_263550/ckpt_best.pth
+  num_classes: 2              # 2 required by PPYoloE loss (class 0=nut, class 1=unused)
+  class_names: ["nut"]        # nut-only system
+
+# ── Pipeline ──────────────────────────────────────────
+pipeline:
+  confidence_threshold: 0.25  # minimum raw confidence for tracking
+  device: cuda                # cuda | cpu
+  source: data/videos/cropped_nuts.mp4   # video file, 0 for webcam, or rtsp://
+
+# ── Tracking ─────────────────────────────────────────
+tracking:
+  tracker: bytetrack          # bytetrack | botsort
+  track_buffer: 15            # frames to keep dead tracks
+  min_hits: 3                 # min detections before track is confirmed
+  iou_threshold: 0.5          # higher = stricter matching, less ID switches
+
+# ── Counting ─────────────────────────────────────────
+counting:
+  # Empty ROI = count all nuts. Add polygon points to restrict to a zone.
+  roi_points: []
+  # Vertical counting line — format [[x1, y1], [x2, y2]]
+  count_line: [[432, 0], [432, 360]]
+  # Direction: "left_to_right", "right_to_left", or "any"
+  count_direction: left_to_right
+  # Statistical gates
+  min_track_age: 4
+  min_mean_confidence: 0.6
+  direction_cos_threshold: -1.0    # -1 disables direction check
+  min_speed: 0.3
+  max_speed: 50.0
+  min_area: 100
+  max_area: 250000
+  max_stale_frames: 30
+  stale_movement_thresh: 5.0
+  gap_timeout: 10.0
+
+# ── SAHI (small object slicing) ──────────────────────
+sahi:
+  enabled: false
+  slice_height: 640
+  slice_width: 640
+  overlap_ratio: 0.2
+
+# ── Output ───────────────────────────────────────────
+output:
+  csv_path: logs/counts.csv
+  video_path: null            # null = no recording, or e.g. logs/output.mp4
+  display: true               # show live OpenCV window (may not work in conda)
+  display_width: 960

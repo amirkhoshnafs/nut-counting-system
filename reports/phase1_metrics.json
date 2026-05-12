@@ -1,0 +1,8 @@
+{
+  "_note": "Nut-only detection metrics. Combined nut+bolt mAP@0.50 is 0.451 — bolt class had zero detections (27:1 class imbalance). System scope is nut-only counting.",
+  "nut_mAP@0.50": 0.865,
+  "nut_mAP@0.50:0.95": 0.685,
+  "nut_mAP@0.75": 0.805,
+  "nut_AR@100": 0.764,
+  "combined_mAP@0.50": 0.451
+}
