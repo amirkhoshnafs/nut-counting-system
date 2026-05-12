@@ -32,9 +32,13 @@ A larger manually labeled video dataset is needed for stronger counting accuracy
 
 ## Demo
 
-![Counting demo](assets/counting_output.gif)
+<p align="center">
+  <img src="assets/counting_output.gif" width="640" alt="Demo GIF">
+</p>
 
-![Screenshot](assets/screenshot_80.jpg)
+<p align="center">
+  <img src="assets/screenshot_80.jpg" width="640" alt="Screenshot">
+</p>
 
 ## Setup
 
