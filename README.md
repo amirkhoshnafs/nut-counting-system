@@ -30,6 +30,12 @@ Camera/Video → YOLO-NAS Detection → ByteTrack Tracking → Line-Crossing Cou
 
 A larger manually labeled video dataset is needed for stronger counting accuracy claims.
 
+## Demo
+
+![Counting demo](assets/counting_output.gif)
+
+![Screenshot](assets/screenshot_80.jpg)
+
 ## Setup
 
 ### 1. Environment
